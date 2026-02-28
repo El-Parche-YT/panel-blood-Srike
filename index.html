@@ -1,0 +1,1073 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Fire Access</title>
+<link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@500;600;700;900&display=swap" rel="stylesheet">
+
+<style>
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    font-family: 'Rajdhani', sans-serif;
+}
+
+body{
+    min-height:100vh;
+    background:linear-gradient(180deg,#050505,#120000);
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    flex-direction: column;
+    color:#fff;
+    transition:0.3s;
+    overflow-y: auto;
+    overflow-x: hidden;
+    padding-bottom: 80px; /* Espacio extra para evitar que la barra del cel tape contenido */
+}
+
+#particles {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 0;
+}
+
+body.red{
+    background:linear-gradient(180deg,#120000,#000);
+}
+
+body.success-bg{
+    background:linear-gradient(180deg,#002200,#000);
+}
+
+.wrapper{
+    width:100%;
+    max-width:450px;
+    padding:20px;
+    text-align:center;
+    position: relative;
+    z-index: 10;
+    background: transparent;
+    border-radius: 15px;
+    box-shadow: 0 0 30px rgba(255, 204, 0, 0.15);
+    margin: 40px auto; /* Centrado seguro y espacio vertical */
+    overflow: hidden;
+}
+
+.wrapper::before {
+    content: '';
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: conic-gradient(#ffcc00, #ffcc00 40%, #ffffff 50%, #ffcc00 60%, #ffcc00);
+    animation: rotateBorder 4s linear infinite;
+    z-index: -2;
+}
+
+.wrapper::after {
+    content: '';
+    position: absolute;
+    inset: 3px;
+    background: linear-gradient(145deg, rgba(20, 20, 20, 0.95), rgba(40, 30, 0, 0.95));
+    border-radius: 12px;
+    z-index: -1;
+}
+
+@keyframes rotateBorder {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+.title{
+    font-size:1.5rem;
+    color:#000;
+    background: #ffcc00;
+    font-weight:900;
+    margin: -20px -20px 25px -20px;
+    padding: 20px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.5);
+    clip-path: polygon(0 0, 100% 0, 100% 85%, 50% 100%, 0 85%);
+    padding-bottom: 35px;
+    -webkit-text-fill-color: #000;
+    filter: none;
+}
+
+.subtitle{
+    font-size:0.85rem;
+    opacity:0.8;
+    margin:10px 0 30px;
+}
+
+/* PASOS */
+.step-btn{
+    display:block;
+    width:100%;
+    padding:16px;
+    margin-bottom:15px;
+    background: rgba(0, 140, 255, 0.1);
+    color:#fff;
+    text-decoration:none;
+    border: 1px solid rgba(0, 140, 255, 0.4);
+    border-left: 4px solid #008cff;
+    border-radius: 8px;
+    font-size:1.1rem;
+    font-weight:700;
+    text-transform:uppercase;
+    letter-spacing:1px;
+    transition:0.3s;
+    cursor:pointer;
+    position: relative;
+    overflow: hidden;
+}
+.step-btn:hover{
+    background: rgba(0, 140, 255, 0.25);
+    box-shadow:0 0 20px rgba(0, 140, 255, 0.5);
+    transform:translateY(-3px);
+    border-color: #008cff;
+}
+.step-btn.completed{
+    background: rgba(0, 255, 136, 0.1);
+    border-color:#00ff88;
+    border-left-color: #00ff88;
+    color:#00ff88;
+    pointer-events:none;
+    animation: successPop 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275), successPulse 2s infinite 0.5s;
+    box-shadow: 0 0 15px rgba(0, 255, 136, 0.5);
+}
+.disabled{
+    opacity:0.5;
+    background: rgba(0,0,0,0.3);
+    border-color:#444;
+    border-left-color: #444;
+    pointer-events:none;
+    box-shadow:none;
+}
+
+/* ICONOS SVG */
+.btn-icon {
+    width: 24px;
+    height: 24px;
+    fill: currentColor;
+    vertical-align: middle;
+    margin-right: 10px;
+    position: relative;
+    top: -2px;
+}
+
+/* ANIMACIONES NUEVAS */
+@keyframes verifyPulse {
+    0% { box-shadow: 0 0 5px orange; border-color: orange; transform: scale(0.98); }
+    50% { box-shadow: 0 0 15px orange; border-color: #ffcc00; transform: scale(1); }
+    100% { box-shadow: 0 0 5px orange; border-color: orange; transform: scale(0.98); }
+}
+
+@keyframes successPulse {
+    0% { box-shadow: 0 0 5px #00ff88; border-color: #00ff88; transform: scale(0.98); }
+    50% { box-shadow: 0 0 15px #00ff88; border-color: #afffcf; transform: scale(1); }
+    100% { box-shadow: 0 0 5px #00ff88; border-color: #00ff88; transform: scale(0.98); }
+}
+
+@keyframes unlockedPulse {
+    0% { box-shadow: 0 0 5px #00ff00; border-color: #00ff00; transform: scale(0.98); }
+    50% { box-shadow: 0 0 20px #00ff00; border-color: #ccffcc; transform: scale(1); }
+    100% { box-shadow: 0 0 5px #00ff00; border-color: #00ff00; transform: scale(0.98); }
+}
+
+@keyframes slowBlink {
+    50% { filter: brightness(1.3); }
+}
+
+@keyframes successPop {
+    0% { transform: scale(0.8); opacity: 0; }
+    60% { transform: scale(1.1); opacity: 1; }
+    100% { transform: scale(1); }
+}
+
+@keyframes unlockShake {
+    0% { transform: translateX(0); }
+    25% { transform: translateX(-5px) rotate(-2deg); }
+    50% { transform: translateX(5px) rotate(2deg); }
+    75% { transform: translateX(-5px) rotate(-2deg); }
+    100% { transform: translateX(0); }
+}
+
+/* BARRA DE PROGRESO */
+.progress-container {
+    width: 100%;
+    background: #1a0000;
+    border: 1px solid #ff3333;
+    border-radius: 15px;
+    margin-bottom: 15px;
+    overflow: hidden;
+    display: none; /* Oculto por defecto */
+    box-shadow: 0 0 10px rgba(255, 0, 0, 0.2);
+}
+
+.progress-bar {
+    height: 22px;
+    width: 0%;
+    background: linear-gradient(90deg, #ff0000, #ffae00);
+    text-align: center;
+    line-height: 22px;
+    color: #fff;
+    font-size: 0.7rem;
+    font-weight: bold;
+    transition: width 0.05s linear;
+    white-space: nowrap;
+    text-shadow: 0 0 2px black;
+}
+
+/* BOTON */
+.hack-btn{
+    display:block;
+    width:100%;
+    padding:16px;
+    background:linear-gradient(135deg, #ff0000 0%, #990000 100%);
+    color:#fff;
+    font-size:1.1rem;
+    font-weight:900;
+    text-decoration:none;
+    border: 1px solid rgba(255,255,255,0.2);
+    border-radius:12px;
+    box-shadow:0 0 20px rgba(255, 0, 0, 0.6);
+    transition:0.3s;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+}
+
+.hack-btn:hover{
+    transform:translateY(-2px);
+    box-shadow:0 0 40px rgba(255, 0, 0, 0.8);
+    filter: brightness(1.2);
+}
+
+.hack-btn.unlocked {
+    animation: unlockShake 0.8s ease-in-out, unlockedPulse 2s infinite 0.8s;
+    background: linear-gradient(90deg, #00b300, #00ff00);
+    box-shadow: 0 0 40px #00ff00;
+}
+
+.verifying {
+    animation: verifyPulse 1s infinite;
+}
+
+.linkvertise{
+    font-size:0.7rem;
+    opacity:0.6;
+    margin-top:6px;
+}
+
+/* BOTON BYPASS */
+.bypass-btn {
+    display: block;
+    width: 100%;
+    padding: 15px;
+    margin: 10px 0 20px 0;
+    background: linear-gradient(45deg, #ffcc00, #ff8800);
+    color: #000;
+    text-align: center;
+    text-decoration: none;
+    border-radius: 50px;
+    font-weight: 900;
+    font-size: 1rem;
+    border: 2px solid #fff;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    box-shadow: 0 0 25px rgba(255, 200, 0, 0.6);
+    transition: 0.3s;
+    animation: pulseWarning 2s infinite;
+    position: relative;
+    overflow: hidden;
+}
+.bypass-btn:hover {
+    transform: scale(1.05);
+    box-shadow: 0 0 40px rgba(255, 200, 0, 0.8);
+    filter: brightness(1.1);
+}
+
+@keyframes pulseWarning {
+    0% { box-shadow: 0 0 0 0 rgba(255, 200, 0, 0.7); }
+    70% { box-shadow: 0 0 0 15px rgba(255, 200, 0, 0); }
+    100% { box-shadow: 0 0 0 0 rgba(255, 200, 0, 0); }
+}
+
+/* CHANGELOG */
+.changelog-container {
+    background: linear-gradient(145deg, rgba(20, 20, 20, 0.9), rgba(40, 30, 0, 0.9));
+    border: 2px solid #ffcc00;
+    border-radius: 15px;
+    padding: 20px;
+    margin: 30px 0;
+    text-align: center;
+    box-shadow: 0 0 30px rgba(255, 204, 0, 0.15);
+    position: relative;
+    overflow: hidden;
+}
+
+.changelog-container::before {
+    display: none;
+}
+
+.changelog-header {
+    font-size: 1.2rem;
+    color: #000;
+    background: #ffcc00;
+    font-weight: 900;
+    margin: -20px -20px 15px -20px;
+    padding: 15px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.5);
+    clip-path: polygon(0 0, 100% 0, 100% 85%, 50% 100%, 0 85%);
+    padding-bottom: 25px;
+    animation: none;
+    border: none;
+    border-radius: 0;
+}
+
+.changelog-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.changelog-item {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    font-size: 0.9rem;
+    color: #eee;
+    margin-bottom: 8px;
+    padding: 10px 15px;
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 8px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    transition: 0.3s;
+}
+
+.changelog-item:last-child {
+    margin-bottom: 0;
+}
+
+.changelog-item:hover {
+    background: rgba(255, 204, 0, 0.1);
+    border-color: #ffcc00;
+    transform: translateX(5px);
+}
+
+.check-icon {
+    color: #ffcc00;
+    margin-right: 12px;
+    width: 18px;
+    height: 18px;
+    min-width: 18px;
+    filter: drop-shadow(0 0 5px #ffcc00);
+}
+
+/* BOTON GRUPO WHATSAPP */
+.whatsapp-group-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    padding: 12px;
+    margin-top: 10px;
+    margin-bottom: 5px;
+    background: linear-gradient(90deg, #25D366, #075E54);
+    color: #fff;
+    text-decoration: none;
+    border-radius: 8px;
+    font-weight: 800;
+    font-size: 0.95rem;
+    border: 1px solid rgba(37, 211, 102, 0.5);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    box-shadow: 0 0 15px rgba(37, 211, 102, 0.3);
+    transition: 0.3s;
+    animation: whatsappPulse 2s infinite;
+    gap: 8px;
+}
+
+.whatsapp-group-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 0 25px rgba(37, 211, 102, 0.6);
+    filter: brightness(1.1);
+}
+
+@keyframes whatsappPulse {
+    0% { box-shadow: 0 0 0 0 rgba(37, 211, 102, 0.7); }
+    70% { box-shadow: 0 0 0 10px rgba(37, 211, 102, 0); }
+    100% { box-shadow: 0 0 0 0 rgba(37, 211, 102, 0); }
+}
+
+/* BOTON YOUTUBE */
+.youtube-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    padding: 12px;
+    margin-top: 10px;
+    margin-bottom: 5px;
+    background: linear-gradient(90deg, #FF0000, #8B0000);
+    color: #fff;
+    text-decoration: none;
+    border-radius: 8px;
+    font-weight: 800;
+    font-size: 0.95rem;
+    border: 1px solid rgba(255, 0, 0, 0.5);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    box-shadow: 0 0 15px rgba(255, 0, 0, 0.3);
+    transition: 0.3s;
+    animation: youtubePulse 2s infinite;
+    gap: 8px;
+}
+
+.youtube-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 0 25px rgba(255, 0, 0, 0.6);
+    filter: brightness(1.1);
+}
+
+@keyframes youtubePulse {
+    0% { box-shadow: 0 0 0 0 rgba(255, 0, 0, 0.7); }
+    70% { box-shadow: 0 0 0 10px rgba(255, 0, 0, 0); }
+    100% { box-shadow: 0 0 0 0 rgba(255, 0, 0, 0); }
+}
+
+/* BOTON TIKTOK */
+.tiktok-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    padding: 12px;
+    margin-top: 10px;
+    margin-bottom: 5px;
+    background: linear-gradient(90deg, #000000, #333333);
+    color: #fff;
+    text-decoration: none;
+    border-radius: 8px;
+    font-weight: 800;
+    font-size: 0.95rem;
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    box-shadow: 0 0 15px rgba(255, 255, 255, 0.2);
+    transition: 0.3s;
+    animation: tiktokPulse 2s infinite;
+    gap: 8px;
+}
+
+.tiktok-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 0 25px rgba(255, 255, 255, 0.4);
+    filter: brightness(1.1);
+}
+
+@keyframes tiktokPulse {
+    0% { box-shadow: 0 0 0 0 rgba(255, 255, 255, 0.4); }
+    70% { box-shadow: 0 0 0 10px rgba(255, 255, 255, 0); }
+    100% { box-shadow: 0 0 0 0 rgba(255, 255, 255, 0); }
+}
+
+/* PROMO DINERO */
+.money-promo {
+    background: linear-gradient(145deg, #000000, #1a1a00);
+    border: 2px solid #ffd700;
+    border-radius: 15px;
+    padding: 15px;
+    margin-bottom: 20px;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+    box-shadow: 0 0 15px rgba(255, 215, 0, 0.2);
+    animation: borderGlow 3s infinite alternate;
+}
+
+.money-promo::before {
+    content: '';
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: conic-gradient(transparent, rgba(255, 215, 0, 0.3), transparent 30%);
+    animation: rotateLight 4s linear infinite;
+}
+
+.money-content {
+    position: relative;
+    z-index: 2;
+}
+
+.money-title {
+    color: #ffd700;
+    font-size: 1.1rem;
+    font-weight: 900;
+    text-transform: uppercase;
+    margin-bottom: 5px;
+    text-shadow: 0 0 10px rgba(255, 215, 0, 0.5);
+}
+
+.money-desc {
+    color: #fff;
+    font-size: 0.8rem;
+    margin-bottom: 12px;
+    opacity: 0.9;
+}
+
+.money-btn {
+    display: block;
+    width: 100%;
+    padding: 10px;
+    background: linear-gradient(90deg, #ffd700, #ffaa00);
+    color: #000;
+    text-decoration: none;
+    font-weight: 800;
+    border-radius: 8px;
+    text-transform: uppercase;
+    font-size: 0.9rem;
+    box-shadow: 0 0 15px rgba(255, 215, 0, 0.5);
+    transition: 0.3s;
+    animation: pulseMoney 1.5s infinite;
+}
+
+.money-btn:hover {
+    transform: scale(1.02);
+    box-shadow: 0 0 25px rgba(255, 215, 0, 0.8);
+    filter: brightness(1.1);
+}
+
+@keyframes borderGlow {
+    0% { box-shadow: 0 0 10px rgba(255, 215, 0, 0.2); border-color: #b8860b; }
+    100% { box-shadow: 0 0 25px rgba(255, 215, 0, 0.5); border-color: #ffd700; }
+}
+
+@keyframes rotateLight {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+@keyframes pulseMoney {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.02); }
+    100% { transform: scale(1); }
+}
+
+/* SWITCH */
+.switch{
+    margin-top:25px;
+    font-size:0.7rem;
+    cursor:pointer;
+    opacity:0.7;
+}
+
+/* FOOTER */
+.footer{
+    margin-top:15px;
+    font-size:0.65rem;
+    opacity:0.5;
+}
+
+@media(max-width:480px){
+    .wrapper {
+        padding: 20px;
+        border: 2px solid #ffcc00;
+    }
+    .title{
+        font-size:1.3rem;
+    }
+    .step-btn {
+        padding: 15px;
+        font-size: 1rem;
+    }
+    .hack-btn { 
+        font-size: 1rem; 
+        padding: 15px; 
+    }
+}
+
+/* MENU HAMBURGUESA */
+.hamburger {
+    position: fixed;
+    top: 20px;
+    left: 20px;
+    font-size: 30px;
+    cursor: pointer;
+    z-index: 1000;
+    background: none;
+    border: none;
+    color: white;
+    text-shadow: 0 0 10px red;
+}
+
+.side-menu {
+    position: fixed;
+    top: 0;
+    left: -100%; /* Oculto por defecto */
+    width: 250px;
+    height: auto;
+    background: rgba(0, 0, 0, 0.8);
+    backdrop-filter: blur(5px);
+    border-right: 2px solid red;
+    border-bottom: 2px solid red;
+    border-bottom-right-radius: 20px;
+    transition: 0.4s;
+    z-index: 1001;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding-top: 60px;
+    padding-bottom: 30px;
+    box-shadow: 5px 0 15px rgba(255, 0, 0, 0.2);
+}
+
+.side-menu.active {
+    left: 0;
+}
+
+.menu-logo {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    border: 2px solid red;
+    margin-bottom: 10px;
+    object-fit: cover;
+    background: #333; /* Fondo por si no hay imagen */
+}
+
+.menu-name {
+    font-size: 1.2rem;
+    font-weight: bold;
+    margin-bottom: 30px;
+    color: #fff;
+    text-transform: uppercase;
+}
+
+.menu-link {
+    color: white;
+    text-decoration: none;
+    padding: 12px 20px;
+    border: 1px solid red;
+    border-radius: 8px;
+    transition: 0.3s;
+    font-size: 0.9rem;
+    text-align: center;
+    width: 80%;
+}
+
+.menu-link:hover {
+    background: red;
+    box-shadow: 0 0 10px red;
+}
+
+.close-btn {
+    position: absolute;
+    top: 15px;
+    right: 20px;
+    font-size: 30px;
+    cursor: pointer;
+    color: #fff;
+}
+
+/* TOAST NOTIFICATIONS (Mensajes emergentes) */
+.toast-container {
+    position: fixed;
+    bottom: 30px;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 2000;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    width: 90%;
+    max-width: 350px;
+}
+
+.toast {
+    background: rgba(20, 20, 20, 0.95);
+    color: #fff;
+    padding: 12px 20px;
+    border-radius: 8px;
+    border-left: 4px solid #00ff88;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.5);
+    font-size: 0.9rem;
+    animation: slideUp 0.3s ease-out forwards;
+    backdrop-filter: blur(5px);
+}
+
+.social-wrapper {
+    width: 100%;
+    max-width: 450px;
+    padding: 0 20px;
+    z-index: 10;
+}
+</style>
+</head>
+
+<body>
+<!-- FONDO DE PARTICULAS -->
+<canvas id="particles"></canvas>
+
+<!-- CONTENEDOR DE NOTIFICACIONES -->
+<div class="toast-container" id="toastContainer"></div>
+
+<!-- MENU LATERAL -->
+<button class="hamburger" onclick="toggleMenu()">☰</button>
+
+<div class="side-menu" id="sideMenu">
+    <div class="close-btn" onclick="toggleMenu()">&times;</div>
+    
+    <!-- LOGO Y NOMBRE -->
+    <!-- Asegúrate de tener una imagen llamada logo.png o cambia el nombre aquí -->
+    <img src="Parche.jpeg" alt="Logo" class="menu-logo">
+    <div class="menu-name">El Parche YT</div>
+
+    <!-- ENLACE TIENDA -->
+    <!-- Cambia el href="#" por el link real de tu tienda -->
+    <a href="https://tienda10.github.io/Tienda-De-Juegos-Gratis/" class="menu-link">
+        🎮 Tienda de juegos gratis
+    </a>
+</div>
+
+<div class="wrapper">
+
+    <div class="title">PANELES</div>
+
+    <!-- INFO DISPOSITIVO -->
+    <div id="deviceInfo" style="font-size:0.75rem; color:#aaa; margin-bottom:15px; background:rgba(255,0,0,0.1); padding:5px 10px; border-radius:5px; display:inline-block; border:1px solid rgba(255,0,0,0.3);">📱 Escaneando dispositivo...</div>
+
+    <!-- USUARIOS ONLINE -->
+    <div style="font-size:0.75rem; color:#00ff88; margin-bottom:15px; margin-left:5px; background:rgba(0,255,136,0.1); padding:5px 10px; border-radius:5px; display:inline-block; border:1px solid rgba(0,255,136,0.3);">
+        🟢 Online: <b id="userCount">...</b>
+    </div>
+
+    <!-- PASOS DE VERIFICACIÓN -->
+    <a href="https://www.youtube.com/@el_parche_yt" target="_blank" class="step-btn" id="step1" onclick="unlockStep(1)">
+        <svg class="btn-icon" viewBox="0 0 24 24"><path d="M10 15l5.19-3L10 9v6m11.56-7.83c.13.47.22 1.1.28 1.9.07.8.1 1.49.1 2.09L22 12c0 2.19-.16 3.8-.44 4.83-.25.9-.83 1.48-1.73 1.73-.47.13-1.33.22-2.65.28-1.3.07-2.49.1-3.59.1L12 19c-4.19 0-6.8-.16-7.83-.44-.9-.25-1.48-.83-1.73-1.73-.13-.47-.22-1.1-.28-1.9-.07-.8-.1-1.49-.1-2.09L2 12c0-2.19.16-3.8.44-4.83.25-.9.83-1.48 1.73-1.73.47-.13 1.33-.22 2.65-.28 1.3-.07 2.49-.1 3.59-.1L12 5c4.19 0 6.8.16 7.83.44.9.25 1.48.83 1.73 1.73z"/></svg> 1. Suscríbete al canal
+    </a>
+    <a href="https://youtube.com/@gamenexo11?si=ihC_JyZQHESbKXt7" target="_blank" class="step-btn disabled" id="step2" onclick="unlockStep(2)">
+        <svg class="btn-icon" viewBox="0 0 24 24"><path d="M10 15l5.19-3L10 9v6m11.56-7.83c.13.47.22 1.1.28 1.9.07.8.1 1.49.1 2.09L22 12c0 2.19-.16 3.8-.44 4.83-.25.9-.83 1.48-1.73 1.73-.47.13-1.33.22-2.65.28-1.3.07-2.49.1-3.59.1L12 19c-4.19 0-6.8-.16-7.83-.44-.9-.25-1.48-.83-1.73-1.73-.13-.47-.22-1.1-.28-1.9-.07-.8-.1-1.49-.1-2.09L2 12c0-2.19.16-3.8.44-4.83.25-.9.83-1.48 1.73-1.73.47-.13 1.33-.22 2.65-.28 1.3-.07 2.49-.1 3.59-.1L12 5c4.19 0 6.8.16 7.83.44.9.25 1.48.83 1.73 1.73z"/></svg> 2. Suscríbete al canal
+    </a>
+    <a href="https://youtu.be/q7N7BYiRgIY?si=CudfXOpDrmp-dBZd" target="_blank" class="step-btn disabled" id="step3" onclick="unlockStep(3)">
+        <svg class="btn-icon" viewBox="0 0 24 24"><path d="M1 21h4V9H1v12zm22-11c0-1.1-.9-2-2-2h-6.31l.95-4.57.03-.32c0-.41-.17-.79-.44-1.06L14.17 1 7.59 7.59C7.22 7.95 7 8.45 7 9v10c0 1.1.9 2 2 2h9c.83 0 1.54-.5 2.14-1.18l3.71-8.64c.06-.17.1-.36.1-.55V10z"/></svg> 3. Dale Like al video
+    </a>
+
+    <!-- BARRA DE PROGRESO -->
+    <div class="progress-container" id="progressContainer">
+        <div class="progress-bar" id="progressBar">0%</div>
+    </div>
+
+    <!-- BOTON LINKVERTISE -->
+    <a class="hack-btn disabled" id="downloadBtn" href="https://link-target.net/3400650/3mf6omhHvrI1" target="_blank">
+        <svg class="btn-icon" viewBox="0 0 24 24"><path d="M18 8h-1V6c0-2.76-2.24-5-5-5S7 3.24 7 6v2H6c-1.1 0-2 .9-2 2v10c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V10c0-1.1-.9-2-2-2zm-6 9c-1.1 0-2-.9-2-2s.9-2 2-2 2 .9 2 2-.9 2-2 2zm3.1-9H8.9V6c0-1.71 1.39-3.1 3.1-3.1 1.71 0 3.1 1.39 3.1 3.1v2z"/></svg> COMPLETAR PASOS
+    </a>
+    <div class="linkvertise">
+        Acceso protegido por Linkvertise
+    </div>
+
+    <!-- AUDIOS -->
+    <audio id="audio-download" src="Descarga.mp3"></audio>
+
+</div>
+
+<div class="social-wrapper">
+    <!-- PROMO DINERO -->
+    <div class="money-promo">
+        <div class="money-content">
+            <div class="money-title">💸 ¡GANA $5,000 DOLARES GRATIS! 💸</div>
+            <div class="money-desc">Método secreto revelado 2026 - Fácil y Rápido</div>
+            <a href="https://youtu.be/jwzOEHCZ5fI?si=-tz15Leg9-NV2hAD" target="_blank" class="money-btn">
+                ▶ IR AHORA
+            </a>
+        </div>
+    </div>
+
+    <!-- BOTON GRUPO WHATSAPP -->
+    <a href="https://whatsapp.com/channel/0029VbBd5qbIiRovkgdMWf0L" class="whatsapp-group-btn" target="_blank">
+        <svg class="btn-icon" viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"/></svg>
+        GRUPO DE WHATSAPP
+    </a>
+
+    <!-- BOTON TIKTOK -->
+    <a href="https://www.tiktok.com/@el_parche_yt0?_r=1&_t=ZS-93ocfQ27VuW" class="tiktok-btn" target="_blank">
+        <svg class="btn-icon" viewBox="0 0 24 24"><path d="M12.525.02c1.31-.02 2.61-.01 3.91-.02.08 1.53.63 3.09 1.75 4.17 1.12 1.11 2.7 1.62 4.24 1.79v4.03c-1.44-.05-2.89-.35-4.2-.97-.57-.26-1.1-.59-1.62-.93v6.16c0 2.52-1.12 4.84-2.98 6.38-2.24 1.84-5.27 2.43-8.13 1.56-2.52-.77-4.57-2.79-5.33-5.3-1.05-3.48.79-7.12 4.14-8.13.32-.1.66-.18.99-.24v4.03c-.42.05-.83.16-1.2.33-1.26.57-2.05 1.86-1.94 3.24.11 1.54 1.18 2.86 2.72 3.12 1.8.31 3.63-.79 4.24-2.47.27-.74.35-1.54.24-2.33V.02z"/></svg>
+        TIKTOK
+    </a>
+</div>
+
+<script>
+/* DETECTAR DISPOSITIVO */
+const ua = navigator.userAgent;
+let device = "PC / Desconocido";
+
+if (/iPhone/i.test(ua)) device = "iPhone";
+else if (/iPad/i.test(ua)) device = "iPad";
+else if (/Android/i.test(ua)) {
+    if (/Samsung|SM-|GT-/i.test(ua)) device = "Samsung";
+    else if (/Redmi|Mi |Xiaomi|POCO/i.test(ua)) device = "Xiaomi";
+    else if (/Huawei|Honor/i.test(ua)) device = "Huawei";
+    else if (/Moto|Motorola/i.test(ua)) device = "Motorola";
+    else if (/Pixel/i.test(ua)) device = "Google Pixel";
+    else if (/Oppo/i.test(ua)) device = "Oppo";
+    else if (/Vivo/i.test(ua)) device = "Vivo";
+    else if (/Realme/i.test(ua)) device = "Realme";
+    else if (/OnePlus/i.test(ua)) device = "OnePlus";
+    else if (/Infinix/i.test(ua)) device = "Infinix";
+    else device = "Android";
+}
+else if (/Windows/i.test(ua)) device = "PC Windows";
+
+document.getElementById('deviceInfo').innerHTML = `📱 Dispositivo: <b>${device}</b> detectado`;
+
+/* CONTADOR DE USUARIOS ONLINE */
+let currentUsers = Math.floor(Math.random() * (350 - 120) + 120); // Inicia entre 120 y 350
+const userCountDisplay = document.getElementById('userCount');
+
+function updateOnlineUsers() {
+    // Sube o baja un poco (simulación)
+    const change = Math.floor(Math.random() * 10) - 4; 
+    currentUsers += change;
+    userCountDisplay.innerText = currentUsers;
+    
+    // Se actualiza cada 2 a 5 segundos
+    setTimeout(updateOnlineUsers, Math.random() * 3000 + 2000);
+}
+updateOnlineUsers();
+
+/* SISTEMA DE TOASTS (Notificaciones) */
+function showToast(msg) {
+    const container = document.getElementById('toastContainer');
+    const toast = document.createElement('div');
+    toast.className = 'toast';
+    toast.innerHTML = msg;
+    container.appendChild(toast);
+    setTimeout(() => {
+        toast.style.opacity = '0';
+        setTimeout(() => toast.remove(), 300);
+    }, 3000);
+}
+
+function toggleRed(){
+    document.body.classList.toggle("red");
+}
+
+/* LOGICA DE AUDIOS */
+const downloadAudio = document.getElementById('audio-download');
+const hackBtn = document.querySelector('.hack-btn');
+
+// Audio: Descarga y Redirección
+hackBtn.addEventListener('click', (e) => {
+    e.preventDefault(); // Evita ir al link inmediatamente
+
+    downloadAudio.play();
+    downloadAudio.onended = () => {
+        window.location.href = hackBtn.href; // Redirige al terminar el audio
+    };
+});
+
+/* MENU FUNCTION */
+function toggleMenu() {
+    document.getElementById('sideMenu').classList.toggle('active');
+}
+
+/* LOGICA DE PASOS */
+let pendingStep = 0;
+
+// Definir iconos SVG para usar en JS
+const icons = {
+    check: '<svg class="btn-icon" viewBox="0 0 24 24"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg>',
+    time: '<svg class="btn-icon" viewBox="0 0 24 24"><path d="M11.99 2C6.47 2 2 6.48 2 12s4.47 10 9.99 10C17.52 22 22 17.52 22 12S17.52 2 11.99 2zM12 20c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8zm.5-13H11v6l5.25 3.15.75-1.23-4.5-2.67z"/></svg>',
+    download: '<svg class="btn-icon" viewBox="0 0 24 24"><path d="M5 20h14v-2H5v2zM19 9h-4V3H9v6H5l7 7 7-7z"/></svg>',
+    lock: '<svg class="btn-icon" viewBox="0 0 24 24"><path d="M18 8h-1V6c0-2.76-2.24-5-5-5S7 3.24 7 6v2H6c-1.1 0-2 .9-2 2v10c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V10c0-1.1-.9-2-2-2zm-6 9c-1.1 0-2-.9-2-2s.9-2 2-2 2 .9 2 2-.9 2-2 2zm3.1-9H8.9V6c0-1.71 1.39-3.1 3.1-3.1 1.71 0 3.1 1.39 3.1 3.1v2z"/></svg>'
+};
+
+function unlockStep(step){
+    if(step === 1){
+        const btn1 = document.getElementById('step1');
+        if(!btn1.classList.contains('completed')) {
+            pendingStep = 1;
+            showToast("ℹ Regresa aquí después de suscribirte");
+        }
+    } else if(step === 2){
+        const btn2 = document.getElementById('step2');
+        if(!btn2.classList.contains('completed')) {
+            pendingStep = 2;
+            showToast("ℹ Regresa aquí después de suscribirte");
+        }
+    } else if(step === 3){
+        const btn3 = document.getElementById('step3');
+        if(!btn3.classList.contains('completed')) {
+            pendingStep = 3;
+            showToast("ℹ Regresa aquí después de dar like");
+        }
+    }
+}
+
+// Detectar regreso a la pestaña
+document.addEventListener("visibilitychange", () => {
+    if (document.visibilityState === "visible" && pendingStep > 0) {
+        startVerification(pendingStep);
+        pendingStep = 0;
+    }
+});
+
+function startVerification(step){
+    if(step === 1){
+        const btn1 = document.getElementById('step1');
+        const btn2 = document.getElementById('step2'); // Ahora habilita el paso 2
+        
+        if(btn1.classList.contains('completed') || btn1.innerHTML.includes("Verificando")) return;
+
+        let timeLeft = 5;
+        btn1.innerHTML = `${icons.time} Verificando... ${timeLeft}s`;
+        btn1.classList.add('verifying');
+
+        const timer = setInterval(() => {
+            timeLeft--;
+            btn1.innerHTML = `${icons.time} Verificando... ${timeLeft}s`;
+            if(timeLeft <= 0){
+                clearInterval(timer);
+                btn1.classList.remove('verifying');
+                btn1.classList.add('completed');
+                btn1.innerHTML = `${icons.check} Suscrito`;
+                btn2.classList.remove('disabled');
+                showToast("✅ Paso 1 completado");
+            }
+        }, 1000);
+    } else if(step === 2){
+        const btn2 = document.getElementById('step2');
+        const btn3 = document.getElementById('step3'); // Ahora habilita el paso 3
+        
+        if(btn2.classList.contains('completed') || btn2.innerHTML.includes("Verificando")) return;
+
+        let timeLeft = 5;
+        btn2.innerHTML = `${icons.time} Verificando... ${timeLeft}s`;
+        btn2.classList.add('verifying');
+
+        const timer = setInterval(() => {
+            timeLeft--;
+            btn2.innerHTML = `${icons.time} Verificando... ${timeLeft}s`;
+            if(timeLeft <= 0){
+                clearInterval(timer);
+                btn2.classList.remove('verifying');
+                btn2.classList.add('completed');
+                btn2.innerHTML = `${icons.check} Suscrito`;
+                btn3.classList.remove('disabled');
+                showToast("✅ Paso 2 completado");
+            }
+        }, 1000);
+    } else if(step === 3){
+        const btn3 = document.getElementById('step3');
+        const dlBtn = document.getElementById('downloadBtn');
+        
+        if(btn3.classList.contains('completed') || btn3.innerHTML.includes("Verificando")) return;
+
+        let timeLeft = 5;
+        btn3.innerHTML = `${icons.time} Verificando... ${timeLeft}s`;
+        btn3.classList.add('verifying');
+
+        const timer = setInterval(() => {
+            timeLeft--;
+            btn3.innerHTML = `${icons.time} Verificando... ${timeLeft}s`;
+            if(timeLeft <= 0){
+                clearInterval(timer);
+                btn3.classList.remove('verifying');
+                btn3.classList.add('completed');
+                btn3.innerHTML = `${icons.check} Likeado`;
+                
+                // INICIAR BARRA DE PROGRESO
+                const progContainer = document.getElementById('progressContainer');
+                const progBar = document.getElementById('progressBar');
+                progContainer.style.display = 'block';
+                
+                let width = 0;
+                const progInterval = setInterval(() => {
+                    width++;
+                    progBar.style.width = width + '%';
+                    
+                    if(width < 40) progBar.innerHTML = `Conectando servidor... ${width}%`;
+                    else if(width < 80) progBar.innerHTML = `Generando enlace... ${width}%`;
+                    else progBar.innerHTML = `Finalizando... ${width}%`;
+
+                    if(width >= 100){
+                        clearInterval(progInterval);
+                        setTimeout(() => {
+                            progContainer.style.display = 'none'; // Ocultar barra al finalizar
+                            dlBtn.classList.remove('disabled');
+                            dlBtn.classList.add('unlocked');
+                            dlBtn.innerHTML = `${icons.download} DESCARGAR PANEL`;
+                            document.body.classList.add('success-bg');
+                            matrixColor = "#00ff88"; // Cambiar matrix a verde al finalizar
+                            showToast("🔓 ¡Acceso concedido!");
+                        }, 500);
+                    }
+                }, 40); // Velocidad de carga (menor número = más rápido)
+            }
+        }, 1000);
+    }
+}
+
+/* PARTICULAS DE FONDO */
+/* EFECTO MATRIX RAIN */
+const canvas = document.getElementById('particles');
+const ctx = canvas.getContext('2d');
+
+canvas.width = window.innerWidth;
+canvas.height = window.innerHeight;
+
+const matrixChars = "EL PARCHE YT   EL PARCHE YT   0123456789";
+const matrix = matrixChars.split("");
+
+const fontSize = 14;
+const columns = canvas.width / fontSize;
+
+const drops = [];
+for(let x = 0; x < columns; x++)
+    drops[x] = 1;
+
+let matrixColor = "#ff0000";
+
+function drawMatrix() {
+    ctx.fillStyle = "rgba(0, 0, 0, 0.05)";
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+    ctx.fillStyle = matrixColor;
+    ctx.font = fontSize + "px monospace";
+
+    for(let i = 0; i < drops.length; i++) {
+        const text = matrix[Math.floor(Math.random() * matrix.length)];
+        ctx.fillText(text, i * fontSize, drops[i] * fontSize);
+
+        if(drops[i] * fontSize > canvas.height && Math.random() > 0.975)
+            drops[i] = 0;
+
+        drops[i]++;
+    }
+}
+
+window.addEventListener('resize', () => {
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+});
+
+setInterval(drawMatrix, 40);
+</script>
+
+</body>
+</html>
