@@ -26,6 +26,7 @@ body{
     overflow-y: auto;
     overflow-x: hidden;
     padding-bottom: 80px; /* Espacio extra para evitar que la barra del cel tape contenido */
+    cursor: crosshair; /* CURSOR TIPO MIRA */
 }
 
 #particles {
@@ -86,25 +87,73 @@ body.success-bg{
 }
 
 .title{
-    font-size:1.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+
+    font-size:1.4rem; /* Ajustado para el texto más largo */
     color:#000;
     background: #ffcc00;
     font-weight:900;
     margin: -20px -20px 25px -20px;
     padding: 20px;
     text-transform: uppercase;
-    letter-spacing: 1px;
+    letter-spacing: 2px; /* Aumentamos el espacio para mejor legibilidad */
     box-shadow: 0 5px 15px rgba(0,0,0,0.5);
     clip-path: polygon(0 0, 100% 0, 100% 85%, 50% 100%, 0 85%);
     padding-bottom: 35px;
-    -webkit-text-fill-color: #000;
     filter: none;
+}
+
+.title-yt-icon {
+    width: 30px;
+    height: 30px;
+    fill: #000;
+    filter: drop-shadow(1px 1px 1px rgba(0,0,0,0.2));
 }
 
 .subtitle{
     font-size:0.85rem;
     opacity:0.8;
     margin:10px 0 30px;
+}
+
+
+.info-bar {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 25px;
+    width: 100%;
+}
+
+.info-item {
+    background: rgba(0, 0, 0, 0.5);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    padding: 8px 12px;
+    border-radius: 6px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    text-shadow: 0 0 8px var(--info-glow-color);
+    box-shadow: inset 0 0 15px rgba(0,0,0,0.6);
+    transition: all 0.3s ease;
+}
+
+.info-item.device {
+    color: #ff6b6b;
+    --info-glow-color: rgba(255, 107, 107, 0.7);
+    border-left: 4px solid #ff6b6b;
+}
+
+.info-item.online {
+    color: #4dff99;
+    --info-glow-color: rgba(77, 255, 153, 0.7);
+    border-left: 4px solid #4dff99;
 }
 
 /* PASOS */
@@ -124,7 +173,7 @@ body.success-bg{
     text-transform:uppercase;
     letter-spacing:1px;
     transition:0.3s;
-    cursor:pointer;
+    cursor: crosshair;
     position: relative;
     overflow: hidden;
 }
@@ -569,6 +618,102 @@ body.success-bg{
     100% { transform: scale(1); }
 }
 
+/* PROMO CONTRASEÑA */
+.password-promo {
+    background: linear-gradient(145deg, #00001a, #0d001a); /* Dark blue/purple */
+    border: 2px solid #8a2be2; /* BlueViolet */
+    border-radius: 15px;
+    padding: 15px;
+    margin-bottom: 20px;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+    box-shadow: 0 0 15px rgba(138, 43, 226, 0.2);
+    animation: borderGlowPurple 3s infinite alternate;
+}
+
+.password-promo::before {
+    content: '';
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: conic-gradient(transparent, rgba(138, 43, 226, 0.3), transparent 30%);
+    animation: rotateLight 4s linear infinite;
+}
+
+.password-content {
+    position: relative;
+    z-index: 2;
+}
+
+.password-title {
+    color: #9370db; /* MediumPurple */
+    font-size: 1.1rem;
+    font-weight: 900;
+    text-transform: uppercase;
+    margin-bottom: 5px;
+    text-shadow: 0 0 10px rgba(138, 43, 226, 0.5);
+}
+
+.password-desc {
+    color: #fff;
+    font-size: 0.8rem;
+    margin-bottom: 12px;
+    opacity: 0.9;
+}
+
+.password-btn, .tutorial-btn {
+    display: block;
+    width: 100%;
+    padding: 10px;
+    text-decoration: none;
+    font-weight: 800;
+    border-radius: 8px;
+    text-transform: uppercase;
+    font-size: 0.9rem;
+    transition: 0.3s;
+    margin-top: 10px;
+}
+
+.password-btn {
+    background: linear-gradient(90deg, #8a2be2, #4b0082); /* BlueViolet to Indigo */
+    color: #fff;
+    box-shadow: 0 0 15px rgba(138, 43, 226, 0.5);
+    animation: pulsePurple 1.5s infinite;
+}
+
+.password-btn:hover {
+    transform: scale(1.02);
+    box-shadow: 0 0 25px rgba(138, 43, 226, 0.8);
+    filter: brightness(1.1);
+}
+
+.tutorial-btn {
+    background: transparent;
+    color: #9370db;
+    border: 2px solid #9370db;
+}
+
+.tutorial-btn:hover {
+    background: rgba(147, 112, 219, 0.2);
+    color: #fff;
+    border-color: #fff;
+}
+
+/* Keyframes for the new section */
+@keyframes borderGlowPurple {
+    0% { box-shadow: 0 0 10px rgba(138, 43, 226, 0.2); border-color: #4b0082; }
+    100% { box-shadow: 0 0 25px rgba(138, 43, 226, 0.5); border-color: #9370db; }
+}
+
+@keyframes pulsePurple {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.02); }
+    100% { transform: scale(1); }
+}
+
 /* SWITCH */
 .switch{
     margin-top:25px;
@@ -717,6 +862,79 @@ body.success-bg{
     padding: 0 20px;
     z-index: 10;
 }
+
+/* EFECTO SHINE (BRILLO) TEXTO */
+.shiny-text {
+    background: linear-gradient(120deg, #000 0%, #000 35%, #fff 50%, #000 65%, #000 100%);
+    background-size: 200% auto;
+    background-clip: text;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    animation: shineText 4s linear infinite;
+    display: inline-block;
+}
+
+@keyframes shineText {
+    0% { background-position: 200% center; }
+    100% { background-position: -200% center; }
+}
+
+/* ICONO VERIFICADO */
+.verified-icon {
+    width: 24px;
+    height: 24px;
+    margin-left: 2px;
+    filter: drop-shadow(0 0 2px rgba(0,0,0,0.2));
+    animation: pulseBadge 2s infinite;
+}
+
+@keyframes pulseBadge {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.15); }
+    100% { transform: scale(1); }
+}
+
+/* CONSOLA DE HACKER */
+.console-box {
+    display: none;
+    background: rgba(0, 0, 0, 0.9);
+    border: 1px solid #00ff88;
+    font-family: 'Courier New', monospace;
+    padding: 10px;
+    margin-bottom: 15px;
+    border-radius: 5px;
+    text-align: left;
+    height: 120px;
+    overflow-y: auto;
+    box-shadow: 0 0 10px rgba(0, 255, 136, 0.2);
+    font-size: 0.7rem;
+    color: #00ff88;
+}
+.log-line {
+    margin-bottom: 2px;
+    border-bottom: 1px solid rgba(0, 255, 136, 0.1);
+    animation: fadeIn 0.2s forwards;
+}
+@keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+
+/* ESTADISTICAS SISTEMA (FPS/PING) */
+.system-stats {
+    position: fixed;
+    top: 10px;
+    right: 10px;
+    background: rgba(0, 0, 0, 0.8);
+    border: 1px solid #00ff88;
+    color: #00ff88;
+    padding: 5px 10px;
+    font-family: 'Courier New', monospace;
+    font-size: 0.7rem;
+    border-radius: 4px;
+    z-index: 1000;
+    pointer-events: none;
+    display: flex;
+    gap: 10px;
+    box-shadow: 0 0 10px rgba(0, 255, 136, 0.2);
+}
 </style>
 </head>
 
@@ -726,6 +944,12 @@ body.success-bg{
 
 <!-- CONTENEDOR DE NOTIFICACIONES -->
 <div class="toast-container" id="toastContainer"></div>
+
+<!-- ESTADISTICAS DE SISTEMA -->
+<div class="system-stats">
+    <div id="fpsCounter">FPS: 60</div>
+    <div style="border-left: 1px solid #00ff88; padding-left: 10px;" id="pingCounter">PING: 24ms</div>
+</div>
 
 <!-- MENU LATERAL -->
 <button class="hamburger" onclick="toggleMenu()">☰</button>
@@ -747,34 +971,42 @@ body.success-bg{
 
 <div class="wrapper">
 
-    <div class="title">PANELES</div>
+    <div class="title">
+        <svg class="title-yt-icon" viewBox="0 0 28 20"><path d="M27.5 5.5s-.2-1.8-.9-2.6c-.9-.9-1.9-1-2.4-1.1C21.3 1.5 14 1.5 14 1.5s-7.3 0-10.2.3c-.5.1-1.5.2-2.4 1.1-.7.8-.9 2.6-.9 2.6S.2 7.6.2 9.8v1.4c0 2.1.2 4.2.2 4.2s.2 1.8.9 2.6c.9.9 2.1 1 2.6 1.1 2.9.3 10 .3 10 .3s7.3 0 10.2-.3c.5-.1 1.5-.2 2.4-1.1.7-.8.9-2.6.9-2.6s.2-2.1.2-4.2V9.8c0-2.2-.2-4.3-.2-4.3zM11.1 13.7V7.3l6.2 3.2-6.2 3.2z"/></svg>
+        <span class="shiny-text">EL PARCHE YT</span>
+        <svg class="verified-icon" viewBox="0 0 24 24"><path fill="#1da1f2" d="M22.5 12.5c0-1.58-.875-2.95-2.148-3.6.154-.435.238-.905.238-1.4 0-2.21-1.71-3.998-3.818-3.998-.47 0-.92.084-1.336.25C14.818 2.415 13.51 1.5 12 1.5s-2.816.917-3.437 2.25c-.415-.165-.866-.25-1.336-.25-2.11 0-3.818 1.79-3.818 4 0 .495.083.965.238 1.4-1.272.65-2.147 2.02-2.147 3.6 0 1.457.746 2.74 1.863 3.494C3.335 16.034 3.3 16.11 3.3 16.19c0 2.21 1.71 3.998 3.818 3.998.47 0 .92-.084 1.336-.25.62 1.333 1.926 2.25 3.437 2.25 1.512 0 2.818-.917 3.437-2.25.415.165.866.25 1.336.25 2.11 0 3.818-1.79 3.818-4 0-.08-.035-.156-.063-.234 1.117-.754 1.863-2.037 1.863-3.494z"/><path fill="#fff" d="M10 15.172l9.192-9.193 1.415 1.414L10 18l-6.364-6.364 1.414-1.414z"/></svg>
+    </div>
 
-    <!-- INFO DISPOSITIVO -->
-    <div id="deviceInfo" style="font-size:0.75rem; color:#aaa; margin-bottom:15px; background:rgba(255,0,0,0.1); padding:5px 10px; border-radius:5px; display:inline-block; border:1px solid rgba(255,0,0,0.3);">📱 Escaneando dispositivo...</div>
-
-    <!-- USUARIOS ONLINE -->
-    <div style="font-size:0.75rem; color:#00ff88; margin-bottom:15px; margin-left:5px; background:rgba(0,255,136,0.1); padding:5px 10px; border-radius:5px; display:inline-block; border:1px solid rgba(0,255,136,0.3);">
-        🟢 Online: <b id="userCount">...</b>
+    <!-- BARRA DE INFORMACIÓN -->
+    <div class="info-bar">
+        <div id="deviceInfo" class="info-item device">
+            <!-- El contenido se carga con JavaScript -->
+        </div>
+        <div class="info-item online">
+            🟢 Online: <b id="userCount">...</b>
+        </div>
     </div>
 
     <!-- PASOS DE VERIFICACIÓN -->
     <a href="https://www.youtube.com/@el_parche_yt" target="_blank" class="step-btn" id="step1" onclick="unlockStep(1)">
         <svg class="btn-icon" viewBox="0 0 24 24"><path d="M10 15l5.19-3L10 9v6m11.56-7.83c.13.47.22 1.1.28 1.9.07.8.1 1.49.1 2.09L22 12c0 2.19-.16 3.8-.44 4.83-.25.9-.83 1.48-1.73 1.73-.47.13-1.33.22-2.65.28-1.3.07-2.49.1-3.59.1L12 19c-4.19 0-6.8-.16-7.83-.44-.9-.25-1.48-.83-1.73-1.73-.13-.47-.22-1.1-.28-1.9-.07-.8-.1-1.49-.1-2.09L2 12c0-2.19.16-3.8.44-4.83.25-.9.83-1.48 1.73-1.73.47-.13 1.33-.22 2.65-.28 1.3-.07 2.49-.1 3.59-.1L12 5c4.19 0 6.8.16 7.83.44.9.25 1.48.83 1.73 1.73z"/></svg> 1. Suscríbete al canal
     </a>
-    <a href="https://youtube.com/@gamenexo11?si=ihC_JyZQHESbKXt7" target="_blank" class="step-btn disabled" id="step2" onclick="unlockStep(2)">
-        <svg class="btn-icon" viewBox="0 0 24 24"><path d="M10 15l5.19-3L10 9v6m11.56-7.83c.13.47.22 1.1.28 1.9.07.8.1 1.49.1 2.09L22 12c0 2.19-.16 3.8-.44 4.83-.25.9-.83 1.48-1.73 1.73-.47.13-1.33.22-2.65.28-1.3.07-2.49.1-3.59.1L12 19c-4.19 0-6.8-.16-7.83-.44-.9-.25-1.48-.83-1.73-1.73-.13-.47-.22-1.1-.28-1.9-.07-.8-.1-1.49-.1-2.09L2 12c0-2.19.16-3.8.44-4.83.25-.9.83-1.48 1.73-1.73.47-.13 1.33-.22 2.65-.28 1.3-.07 2.49-.1 3.59-.1L12 5c4.19 0 6.8.16 7.83.44.9.25 1.48.83 1.73 1.73z"/></svg> 2. Suscríbete al canal
-    </a>
-    <a href="https://youtu.be/q7N7BYiRgIY?si=CudfXOpDrmp-dBZd" target="_blank" class="step-btn disabled" id="step3" onclick="unlockStep(3)">
-        <svg class="btn-icon" viewBox="0 0 24 24"><path d="M1 21h4V9H1v12zm22-11c0-1.1-.9-2-2-2h-6.31l.95-4.57.03-.32c0-.41-.17-.79-.44-1.06L14.17 1 7.59 7.59C7.22 7.95 7 8.45 7 9v10c0 1.1.9 2 2 2h9c.83 0 1.54-.5 2.14-1.18l3.71-8.64c.06-.17.1-.36.1-.55V10z"/></svg> 3. Dale Like al video
+    <a href="https://youtu.be/G_n7h45pKtU?si=dXUfN-REgl4IxrL-" target="_blank" class="step-btn disabled" id="step2" onclick="unlockStep(2)">
+        <svg class="btn-icon" viewBox="0 0 24 24"><path d="M1 21h4V9H1v12zm22-11c0-1.1-.9-2-2-2h-6.31l.95-4.57.03-.32c0-.41-.17-.79-.44-1.06L14.17 1 7.59 7.59C7.22 7.95 7 8.45 7 9v10c0 1.1.9 2 2 2h9c.83 0 1.54-.5 2.14-1.18l3.71-8.64c.06-.17.1-.36.1-.55V10z"/></svg> 2. Dale Like al video
     </a>
 
     <!-- BARRA DE PROGRESO -->
     <div class="progress-container" id="progressContainer">
         <div class="progress-bar" id="progressBar">0%</div>
     </div>
+    
+    <!-- CONSOLA HACKER -->
+    <div class="console-box" id="consoleBox">
+        <div id="consoleContent"></div>
+    </div>
 
     <!-- BOTON LINKVERTISE -->
-    <a class="hack-btn disabled" id="downloadBtn" href="https://link-target.net/3400650/3mf6omhHvrI1" target="_blank">
+    <a class="hack-btn disabled" id="downloadBtn" href="https://link-center.net/3400650/B59q4J4Y8K5V" target="_blank">
         <svg class="btn-icon" viewBox="0 0 24 24"><path d="M18 8h-1V6c0-2.76-2.24-5-5-5S7 3.24 7 6v2H6c-1.1 0-2 .9-2 2v10c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V10c0-1.1-.9-2-2-2zm-6 9c-1.1 0-2-.9-2-2s.9-2 2-2 2 .9 2 2-.9 2-2 2zm3.1-9H8.9V6c0-1.71 1.39-3.1 3.1-3.1 1.71 0 3.1 1.39 3.1 3.1v2z"/></svg> COMPLETAR PASOS
     </a>
     <div class="linkvertise">
@@ -787,6 +1019,20 @@ body.success-bg{
 </div>
 
 <div class="social-wrapper">
+    <!-- PROMO CONTRASEÑA -->
+    <div class="password-promo">
+        <div class="password-content">
+            <div class="password-title">🔑 Obtener Contraseña para Extraer</div>
+            <div class="password-desc">Necesitarás la clave para descomprimir el archivo del panel.</div>
+            <a href="https://work.ink/2lEU/40e05c05-b3c8-4566-8124-fdcdeeb0468d" target="_blank" class="password-btn">
+                OBTENER CONTRASEÑA
+            </a>
+            <a href="https://youtu.be/cX58Nv0eQCU?si=mSLcoM9pIyXlaZIE" target="_blank" class="tutorial-btn">
+                TUTORIAL PARA OBTENERLA
+            </a>
+        </div>
+    </div>
+
     <!-- PROMO DINERO -->
     <div class="money-promo">
         <div class="money-content">
@@ -833,7 +1079,7 @@ else if (/Android/i.test(ua)) {
 }
 else if (/Windows/i.test(ua)) device = "PC Windows";
 
-document.getElementById('deviceInfo').innerHTML = `📱 Dispositivo: <b>${device}</b> detectado`;
+document.getElementById('deviceInfo').innerHTML = `📱 Dispositivo: <b>${device}</b>`;
 
 /* CONTADOR DE USUARIOS ONLINE */
 let currentUsers = Math.floor(Math.random() * (350 - 120) + 120); // Inicia entre 120 y 350
@@ -849,6 +1095,14 @@ function updateOnlineUsers() {
     setTimeout(updateOnlineUsers, Math.random() * 3000 + 2000);
 }
 updateOnlineUsers();
+
+/* SIMULACION FPS Y PING */
+setInterval(() => {
+    const fps = Math.floor(Math.random() * (60 - 50) + 50);
+    const ping = Math.floor(Math.random() * (50 - 20) + 20);
+    document.getElementById('fpsCounter').innerText = `FPS: ${fps}`;
+    document.getElementById('pingCounter').innerText = `PING: ${ping}ms`;
+}, 1000);
 
 /* SISTEMA DE TOASTS (Notificaciones) */
 function showToast(msg) {
@@ -908,12 +1162,6 @@ function unlockStep(step){
         const btn2 = document.getElementById('step2');
         if(!btn2.classList.contains('completed')) {
             pendingStep = 2;
-            showToast("ℹ Regresa aquí después de suscribirte");
-        }
-    } else if(step === 3){
-        const btn3 = document.getElementById('step3');
-        if(!btn3.classList.contains('completed')) {
-            pendingStep = 3;
             showToast("ℹ Regresa aquí después de dar like");
         }
     }
@@ -952,7 +1200,7 @@ function startVerification(step){
         }, 1000);
     } else if(step === 2){
         const btn2 = document.getElementById('step2');
-        const btn3 = document.getElementById('step3'); // Ahora habilita el paso 3
+        const dlBtn = document.getElementById('downloadBtn');
         
         if(btn2.classList.contains('completed') || btn2.innerHTML.includes("Verificando")) return;
 
@@ -967,36 +1215,32 @@ function startVerification(step){
                 clearInterval(timer);
                 btn2.classList.remove('verifying');
                 btn2.classList.add('completed');
-                btn2.innerHTML = `${icons.check} Suscrito`;
-                btn3.classList.remove('disabled');
-                showToast("✅ Paso 2 completado");
-            }
-        }, 1000);
-    } else if(step === 3){
-        const btn3 = document.getElementById('step3');
-        const dlBtn = document.getElementById('downloadBtn');
-        
-        if(btn3.classList.contains('completed') || btn3.innerHTML.includes("Verificando")) return;
-
-        let timeLeft = 5;
-        btn3.innerHTML = `${icons.time} Verificando... ${timeLeft}s`;
-        btn3.classList.add('verifying');
-
-        const timer = setInterval(() => {
-            timeLeft--;
-            btn3.innerHTML = `${icons.time} Verificando... ${timeLeft}s`;
-            if(timeLeft <= 0){
-                clearInterval(timer);
-                btn3.classList.remove('verifying');
-                btn3.classList.add('completed');
-                btn3.innerHTML = `${icons.check} Likeado`;
+                btn2.innerHTML = `${icons.check} Likeado`;
                 
                 // INICIAR BARRA DE PROGRESO
                 const progContainer = document.getElementById('progressContainer');
                 const progBar = document.getElementById('progressBar');
+                const consoleBox = document.getElementById('consoleBox');
+                const consoleContent = document.getElementById('consoleContent');
+                
                 progContainer.style.display = 'block';
+                consoleBox.style.display = 'block';
                 
                 let width = 0;
+                
+                // Mensajes de consola falsos
+                const logs = [
+                    "Iniciando conexión segura...",
+                    "Bypassing firewall...",
+                    "Accediendo a base de datos...",
+                    "Inyectando script v4.5...",
+                    "Obteniendo permisos root...",
+                    "Desencriptando claves...",
+                    "Generando enlace de descarga...",
+                    "Limpiando rastros...",
+                    "¡ACCESO CONCEDIDO!"
+                ];
+
                 const progInterval = setInterval(() => {
                     width++;
                     progBar.style.width = width + '%';
@@ -1005,10 +1249,23 @@ function startVerification(step){
                     else if(width < 80) progBar.innerHTML = `Generando enlace... ${width}%`;
                     else progBar.innerHTML = `Finalizando... ${width}%`;
 
+                    // Agregar logs a la consola basado en el progreso
+                    if (width % 12 === 0 && logs.length > 0) {
+                        const logMsg = logs.shift();
+                        if(logMsg) {
+                            const p = document.createElement('div');
+                            p.className = 'log-line';
+                            p.innerHTML = `> ${logMsg}`;
+                            consoleContent.appendChild(p);
+                            consoleBox.scrollTop = consoleBox.scrollHeight;
+                        }
+                    }
+
                     if(width >= 100){
                         clearInterval(progInterval);
                         setTimeout(() => {
                             progContainer.style.display = 'none'; // Ocultar barra al finalizar
+                            consoleBox.style.display = 'none'; // Ocultar consola al finalizar
                             dlBtn.classList.remove('disabled');
                             dlBtn.classList.add('unlocked');
                             dlBtn.innerHTML = `${icons.download} DESCARGAR PANEL`;
